@@ -16,8 +16,9 @@ ifdef BUILD_IMAGE
 	BUILD_IMAGE_FLAG=--build-arg BUILD_IMAGE=$(BUILD_IMAGE)
 endif
 BUILD?=DOCKER_BUILDKIT=1 \
-	docker build \
+	docker buildx build \
 	$(BUILD_IMAGE_FLAG) \
+	--platform linux/arm64,linux/amd64 \
 	--build-arg GO_IMAGE=$(GO_IMAGE) \
 	-t rpmbuild-$@/$(ARCH) \
 	-f $@/$(DOCKERFILE) \
