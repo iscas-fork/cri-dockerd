@@ -113,6 +113,11 @@ func (ds *dockerService) PullImage(
 	r *runtimeapi.PullImageRequest,
 ) (*runtimeapi.PullImageResponse, error) {
 	image := r.GetImage()
+	if strings.Contains(image.Image, "pause:") {
+		if image.Image != ds.podSandboxImage {
+			ds.podSandboxImage = image.Image
+		}
+	}
 	auth := r.GetAuth()
 	authConfig := dockertypes.AuthConfig{}
 

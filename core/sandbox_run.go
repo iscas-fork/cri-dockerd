@@ -41,7 +41,6 @@ func (ds *dockerService) RunPodSandbox(
 	podSandboxImage := ds.podSandboxImage
 	if len(podSandboxImage) != 0 {
 		image = podSandboxImage
-		print("---Tag:" + image)
 	}
 
 	// NOTE: To use a custom sandbox image in a private repository, users need to configure the nodes with credentials properly.
