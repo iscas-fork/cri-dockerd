@@ -33,7 +33,7 @@ import (
 	dockerimagetypes "github.com/docker/docker/api/types/image"
 
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/util/clock"
+	"k8s.io/utils/clock"
 )
 
 type CalledDetail struct {
@@ -480,7 +480,7 @@ func GetFakeContainerID(name string) string {
 // It adds an entry "create" to the internal method call record.
 func (f *FakeDockerClient) CreateContainer(
 	c dockertypes.ContainerCreateConfig,
-) (*dockercontainer.ContainerCreateCreatedBody, error) {
+) (*dockercontainer.CreateResponse, error) {
 	f.Lock()
 	defer f.Unlock()
 	f.appendCalled(CalledDetail{name: "create"})
@@ -508,7 +508,7 @@ func (f *FakeDockerClient) CreateContainer(
 
 	f.normalSleep(100, 25, 25)
 
-	return &dockercontainer.ContainerCreateCreatedBody{ID: id}, nil
+	return &dockercontainer.CreateResponse{ID: id}, nil
 }
 
 // StartContainer is a test-spy implementation of DockerClientInterface.StartContainer.
