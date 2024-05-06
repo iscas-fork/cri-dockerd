@@ -25,6 +25,7 @@ import (
 
 	dockertypes "github.com/docker/docker/api/types"
 	dockerfilters "github.com/docker/docker/api/types/filters"
+	dockerregistry "github.com/docker/docker/api/types/registry"
 	"github.com/docker/docker/pkg/jsonmessage"
 
 	"github.com/sirupsen/logrus"
@@ -142,7 +143,7 @@ func (ds *dockerService) PullImage(
 		}
 	}
 	auth := r.GetAuth()
-	authConfig := dockertypes.AuthConfig{}
+	authConfig := dockerregistry.AuthConfig{}
 
 	if auth != nil {
 		authConfig.Username = auth.Username

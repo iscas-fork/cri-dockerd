@@ -286,6 +286,8 @@ type dockerService struct {
 	// methods for more info).
 	containerCleanupInfos map[string]*containerCleanupInfo
 	cleanupInfosLock      sync.RWMutex
+
+	// runtimeInfoLock sync.RWMutex
 }
 
 type dockerServiceAlpha struct {
@@ -442,6 +444,26 @@ func (ds *dockerService) Status(
 		}
 		resp.Info = make(map[string]string)
 		resp.Info["config"] = string(configByt)
+	}
+	return resp, nil
+}
+
+// RuntimeConfig returns the config of the runtime.
+func (ds *dockerService) RuntimeConfig(
+	_ context.Context,
+	r *runtimeapi.RuntimeConfigRequest,
+) (*runtimeapi.RuntimeConfigResponse, error) {
+	resp := &runtimeapi.RuntimeConfigResponse{}
+	if runtime.GOOS == "linux" {
+		resp.Linux = &runtimeapi.LinuxRuntimeConfiguration{}
+		switch ds.cgroupDriver {
+		case "cgroupfs":
+			resp.Linux.CgroupDriver = runtimeapi.CgroupDriver_CGROUPFS
+		case "systemd":
+			resp.Linux.CgroupDriver = runtimeapi.CgroupDriver_SYSTEMD
+		default:
+			return nil, fmt.Errorf("unknown cgroup driver: %s", ds.cgroupDriver)
+		}
 	}
 	return resp, nil
 }
